@@ -38,12 +38,7 @@ dnl ***************************************************************************
 dnl
 dnl Initialization.
 dnl
-AC_INIT([SystemC],
-        [2.3.4],
-        [http://forums.accellera.org/forum/9-systemc/],
-        [systemc],
-        [http://accellera.org/],
-)
+AC_INIT([SystemC],[2.3.4],[http://forums.accellera.org/forum/9-systemc/],[systemc],[http://accellera.org/],[])
 dnl version of the included TLM library
 TLM_PACKAGE_VERSION=2.0.6
 AC_SUBST(TLM_PACKAGE_VERSION)
@@ -55,7 +50,7 @@ AC_CONFIG_MACRO_DIR([config])
 dnl
 dnl Some simple checks.
 dnl
-AC_CANONICAL_SYSTEM
+AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE([1.10 tar-pax -Werror -Wno-portability no-define subdir-objects foreign])
 dnl 1.10 needed for .s file support of LIBTOOLFLAGS
 
@@ -203,6 +198,10 @@ AS_CASE([${TARGET_ARCH}],
          [TARGET_ARCH="${TARGET_ARCH}ppc"
           CPU_ARCH="ppc"
           QT_ARCH="powerpc-apple-macosx"],
+       [arm], dnl
+         [TARGET_ARCH="${TARGET_ARCH}arm"
+          CPU_ARCH="arm64"
+          QT_ARCH="pthreads"],
        [AC_MSG_ERROR("sorry...architecture not supported")])
 
      # check compiler
@@ -267,7 +266,7 @@ dnl    detect C++ library dependencies, esp. for cross-compilation
 CXXFLAGS_USER="${CXXFLAGS}"
 CXXFLAGS="${EXTRA_CXXFLAGS} ${CXXFLAGS}"
 dnl
-AC_PROG_LIBTOOL
+LT_INIT
 dnl  - restore user-given CXXFLAGS
 CXXFLAGS="${CXXFLAGS_USER}"
 
@@ -562,8 +561,7 @@ AC_SUBST(QT_ARCH)
 dnl
 dnl Create the Makefiles.
 dnl
-AC_OUTPUT(
- Makefile 
+AC_CONFIG_FILES([Makefile 
  src/Makefile 
  src/systemc.pc
  src/tlm.pc
@@ -579,7 +577,8 @@ AC_OUTPUT(
  docs/Makefile
  docs/sysc/doxygen/Doxyfile
  docs/tlm/doxygen/Doxyfile
-)
+])
+AC_OUTPUT
 
 dnl
 dnl print configuration summary
